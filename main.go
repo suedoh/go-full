@@ -5,7 +5,12 @@ import (
 	"net/http"
 )
 
+type User struct {
+    Username string
+}
+
 func main() {
+    http.HandleFunc("/", makeAPIFunc(handleHome))
     http.HandleFunc("/api/user", makeAPIFunc(handleUser))
     http.ListenAndServe(":3000", nil)
 }
@@ -18,6 +23,10 @@ func makeAPIFunc(fn apiFunc) http.HandlerFunc {
             writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
         }
     }
+}
+
+func handleHome(w http.ResponseWriter, r *http.Request) error {
+    return writeJSON(w, http.StatusOK, map[string]string{"message": "welcome home"})
 }
 
 func handleUser(w http.ResponseWriter, r *http.Request) error {
